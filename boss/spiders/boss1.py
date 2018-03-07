@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
-import scrapy
+
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from boss.items import bossitem, FirstItemLoader
-from scrapy.contrib.loader import ItemLoader
+from selenium import webdriver
+from scrapy.xlib.pydispatch import dispatcher
+from scrapy import signals
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from fake_useragent import UserAgent
+
 
 class Boss1Spider(CrawlSpider):
     name = 'boss'
@@ -15,6 +20,25 @@ class Boss1Spider(CrawlSpider):
         Rule(LinkExtractor(allow=('www.zhipin.com/job_detail/\d+.html', )), callback='parse_item')
 
     )
+
+
+    def __init__(self):
+        self.ua = UserAgent()
+        headers = self.ua.random
+        dcap = dict(DesiredCapabilities.CHROME)
+        # dcap["Chrome.page.settings.loadImages"] = False
+        dcap["Chrome.page.settings.userAgent"] = headers
+
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        self.driver = webdriver.Chrome()
+        super(Boss1Spider, self).__init__()
+
+        dispatcher.connect(self.spider_close, signals.spider_closed)
+
+
+    def spider_close(self):
+        self.driver.quit()
 
     def parse_item(self, response):
 
