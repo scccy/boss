@@ -93,4 +93,4 @@ class Get_ip(object):
 if __name__ =="__main__":
     # crawl_ips()//
     get_ip = Get_ip()
-    get_ip.rand om_ip()
+    get_ip.random_ip()

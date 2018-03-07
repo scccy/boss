@@ -4,9 +4,20 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
+from __future__ import unicode_literals
 from .tools import get_ip
 from scrapy import signals
+from selenium import webdriver
+from scrapy.http import HtmlResponse
+
+from scrapy import signals
+from scrapy.signalmanager import SignalManager
+from scrapy.responsetypes import responsetypes
+from scrapy.xlib.pydispatch import dispatcher
+from selenium import webdriver
+from six.moves import queue
+from twisted.internet import defer, threads
+from twisted.python.failure import Failure
 
 
 class BossSpiderMiddleware(object):
@@ -102,3 +113,12 @@ class BossDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+
+class jspagemiddleware():
+
+    def process_request(self, request, spider):
+        spider.driver.get(request.url)
+        true_page = driver.page_source
+        return HtmlResponse(url=request.url, body=true_page, encoding="utf-8", request=request)
+
