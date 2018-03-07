@@ -119,6 +119,6 @@ class jspagemiddleware():
 
     def process_request(self, request, spider):
         spider.driver.get(request.url)
-        true_page = driver.page_source
+        true_page = spider.driver.page_source
         return HtmlResponse(url=request.url, body=true_page, encoding="utf-8", request=request)
 
