@@ -11,7 +11,7 @@ from ctypes import *
 
 print('>>>正在初始化...')
 
-YDMApi = windll.LoadLibrary('/Volumes/project/test_project/boss/boss/tools/yundamaAPI-x64.dll')
+YDMApi = windll.LoadLibrary('yundamaAPI-x64.dll')
 
 # 1. http://www.yundama.com/index/reg/developer 注册开发者账号
 # 2. http://www.yundama.com/developer/myapp 添加新软件

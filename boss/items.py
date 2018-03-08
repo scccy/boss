@@ -47,13 +47,13 @@ class bossitem(scrapy.Field):
     tags = scrapy.Field(input_processor=MapCompose(replace_splash))
     id = scrapy.Field(input_processor=MapCompose(get_id))
 
-    # def get_insert_sql(self):
-    #     insert_sql = """
-    #         insert into boss_job(title, url, city, work_years, tags, id)
-    #         VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
-    #         title=VALUES(title), UPDATE url=VALUES(url),
-    #         UPDATE city=VALUES(city), UPDATE work_years=VALUES(work_years),
-    #         tags=VALUES(tags), id=VALUES(id)
-    #     """
-    #     params = (self["title"], self["url"], self["city"], self["work_years"], self["tags"], self["id"])
-    #     return insert_sql, params
+    def get_insert_sql(self):
+        insert_sql = """
+            insert into boss_job(title, url, city, work_years, tags, id)
+            VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
+            title=VALUES(title), UPDATE url=VALUES(url),
+            UPDATE city=VALUES(city), UPDATE work_years=VALUES(work_years),
+            tags=VALUES(tags), id=VALUES(id)
+        """
+        params = (self["title"], self["url"], self["city"], self["work_years"], self["tags"], self["id"])
+        return insert_sql, params

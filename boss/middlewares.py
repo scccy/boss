@@ -117,12 +117,7 @@ class BossDownloaderMiddleware(object):
 
 
 
-# class jspagemiddleware():
-#
-#     def process_request(self, request, spider):
-#         spider.driver.get(request.url)
-#         true_page = spider.driver.page_source
-#         return HtmlResponse(url=request.url, body=true_page, encoding="utf-8", request=request)
+
 
 
 class chromeDownloaderMiddleware(object):
@@ -137,7 +132,7 @@ class chromeDownloaderMiddleware(object):
         # chromeOptions.add_argument('--proxy-server="{0}"'.format(proxy))
         self.Chromeoptions = webdriver.ChromeOptions()
         self.Chromeoptions.add_argument('--headless')
-        self.sem = defer.DeferredSemaphore(self.Chromeoptions)
+        self.sem = defer.DeferredSemaphore(10)
         self.queue = queue.LifoQueue(self.Chromeoptions)
         SignalManager(dispatcher.Any).connect(self._close, signal=signals.spider_closed)
 
