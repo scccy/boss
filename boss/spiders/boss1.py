@@ -23,23 +23,23 @@ class Boss1Spider(CrawlSpider):
 
     )
 
-    def __init__(self):
-        # get_ip = Get_ip()
-        # proxy = get_ip.random_ip()
-        ua = UserAgent()
-        headers = ua.random
-        dcap = dict(DesiredCapabilities.CHROME)
-        # dcap["Chrome.page.settings.loadImages"] = False
-        dcap["Chrome.page.settings.userAgent"] = headers
-        # chromeOptions.add_argument('--proxy-server="{0}"'.format(proxy))
-        self.Chromeoptions = webdriver.ChromeOptions()
-        self.Chromeoptions.add_argument('--headless')
-        self.driver = webdriver.Chrome()
-        super(Boss1Spider, self).__init__()
-        dispatcher.connect(self.spider_close, signals.spider_closed)
-
-    def spider_close(self):
-        self.driver.quit()
+    # def __init__(self):
+    #     # get_ip = Get_ip()
+    #     # proxy = get_ip.random_ip()
+    #     ua = UserAgent()
+    #     headers = ua.random
+    #     dcap = dict(DesiredCapabilities.CHROME)
+    #     # dcap["Chrome.page.settings.loadImages"] = False
+    #     dcap["Chrome.page.settings.userAgent"] = headers
+    #     # chromeOptions.add_argument('--proxy-server="{0}"'.format(proxy))
+    #     self.Chromeoptions = webdriver.ChromeOptions()
+    #     self.Chromeoptions.add_argument('--headless')
+    #     self.driver = webdriver.Chrome()
+    #     super(Boss1Spider, self).__init__()
+    #     dispatcher.connect(self.spider_close, signals.spider_closed)
+    #
+    # def spider_close(self):
+    #     self.driver.quit()
 
     def parse_item(self, response):
 

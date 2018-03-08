@@ -5,12 +5,13 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 from __future__ import unicode_literals
-from .tools import get_ip
 from scrapy import signals
 from selenium import webdriver
 from scrapy.http import HtmlResponse
 from scrapy import signals
 from scrapy.signalmanager import SignalManager
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from fake_useragent import UserAgent
 from scrapy.responsetypes import responsetypes
 from scrapy.xlib.pydispatch import dispatcher
 from selenium import webdriver
@@ -125,10 +126,19 @@ class BossDownloaderMiddleware(object):
 
 
 class chromeDownloaderMiddleware(object):
-    def __init__(self, spider):
-        self.driver = spider.driver
-        self.queue = queue.LifoQueue(self.driver, 10)
-        self.sem = defer.DeferredSemaphore(self.driver)
+    def __init__(self):
+        # get_ip = Get_ip()
+        # proxy = get_ip.random_ip()
+        ua = UserAgent()
+        headers = ua.random
+        dcap = dict(DesiredCapabilities.CHROME)
+        dcap["Chrome.page.settings.loadImages"] = True
+        dcap["Chrome.page.settings.userAgent"] = headers
+        # chromeOptions.add_argument('--proxy-server="{0}"'.format(proxy))
+        self.Chromeoptions = webdriver.ChromeOptions()
+        self.Chromeoptions.add_argument('--headless')
+        self.sem = defer.DeferredSemaphore(self.Chromeoptions)
+        self.queue = queue.LifoQueue(self.Chromeoptions)
         SignalManager(dispatcher.Any).connect(self._close, signal=signals.spider_closed)
 
     def _close(self):
@@ -144,5 +154,25 @@ class chromeDownloaderMiddleware(object):
         try:
             driver = self.queue.get_nowait()
         except queue.Empty:
-            driver = webdriver.PhantomJS(spider.Chromeoptions)
+            driver = webdriver.Chrome()
 
+        driver.get(request.url)
+        dfd = threads.deferToThread(lambda: driver.switch_to.window(driver.current_window_handle))
+        dfd.addCallback(self._response, driver, spider)
+        return dfd
+
+    def _response(self, _, driver, spider):
+        body = driver.execute_script("return document.documentElement.innerHTML")
+        if body.startswith("<head></head>"):  # cannot access response header in Selenium
+            body = driver.execute_script("return document.documentElement.textContent")
+        url = driver.current_url
+        respcls = responsetypes.from_args(url=url, body=body[:100].encode('utf8'))
+        resp = respcls(url=url, body=body, encoding="utf-8")
+
+        response_failed = getattr(spider, "response_failed", None)
+        if response_failed and callable(response_failed) and response_failed(resp, driver):
+            driver.close()
+            return defer.fail(Failure())
+        else:
+            self.queue.put(driver)
+            return defer.succeed(resp)
