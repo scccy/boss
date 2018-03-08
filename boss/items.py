@@ -43,9 +43,11 @@ class bossitem(scrapy.Field):
     title = scrapy.Field()
     url = scrapy.Field()
     city = scrapy.Field(input_processor=MapCompose(get_city))
-    work_years = scrapy.Field(output_processor=Takethreed)
+    work_years = scrapy.Field(output_processor=Takethreed())
     tags = scrapy.Field(input_processor=MapCompose(replace_splash))
     id = scrapy.Field(input_processor=MapCompose(get_id))
+
+
 
     def get_insert_sql(self):
         insert_sql = """
