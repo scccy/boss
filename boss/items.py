@@ -50,10 +50,10 @@ class bossitem(scrapy.Field):
     def get_insert_sql(self):
         insert_sql = """
             insert into boss_job(title, url, city, work_years, tags, id)
-            VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
-            title=VALUES(title), UPDATE url=VALUES(url),
-            UPDATE city=VALUES(city), UPDATE work_years=VALUES(work_years),
-            tags=VALUES(tags), id=VALUES(id)
+            VALUES (%s, %s, %s, %s, %s, %s) 
+            ON DUPLICATE KEY UPDATE id=VALUES(id), title=VALUES(title), url=VALUES(url),
+              city=VALUES(city), work_years=VALUES(work_years), 
+              tags=VALUES(tags) 
         """
         params = (self["title"], self["url"], self["city"], self["work_years"], self["tags"], self["id"])
         return insert_sql, params

@@ -96,3 +96,15 @@ MYSQL_HOST = 'localhost'
 MYSQL_DB = 'test'         #数据库名字，请修改
 MYSQL_USER = 'root'             #数据库账号，请修改
 MYSQL_PASSWORD = '123456'         #数据库密码，请修改
+
+#redis账号配置
+REDIS_HOST = "localhost"
+REDIS_PORT = "6379"
+
+#链接url
+REDIS_URL = 'redis://user:pass@hostname:9001'
+
+#指定连接Redis的Python模块
+# REDIS_PARAMS['redis_cls'] = 'myproject.RedisClient'
+REDIS_PASSWORD = "258795"
+

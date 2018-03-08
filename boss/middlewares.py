@@ -126,6 +126,7 @@ class chromeDownloaderMiddleware(object):
         # proxy = get_ip.random_ip()
         ua = UserAgent()
         headers = ua.random
+        print(headers)
         dcap = dict(DesiredCapabilities.CHROME)
         dcap["Chrome.page.settings.loadImages"] = True
         dcap["Chrome.page.settings.userAgent"] = headers

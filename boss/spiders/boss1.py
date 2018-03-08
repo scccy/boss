@@ -26,10 +26,10 @@ class Boss1Spider(CrawlSpider):
         item_loader.add_xpath("title", "/html/body/div[1]/div[2]/div[1]/div/div/div[2]/div[2]/h1/text()")
         item_loader.add_xpath("city", "/html/body/div[1]/div[2]/div[1]/div/div/div[2]/p/text()")
         item_loader.add_value("url", response.url)
-        item_loader.add_xpath("work_year", "/html/body/div[1]/div[2]/div[1]/div/div/div[2]/p/text()")
-        item_loader.add_xpath("tag", "/html/body/div[1]/div[2]/div[3]/div/div[2]/div[3]/div[1]/div/text()")
+        item_loader.add_xpath("work_years", "/html/body/div[1]/div[2]/div[1]/div/div/div[2]/p/text()")
+        item_loader.add_xpath("tags", "/html/body/div[1]/div[2]/div[3]/div/div[2]/div[3]/div[1]/div/text()")
         item_loader.add_value("id", response.url)
         job_item = item_loader.load_item()
 
-        return job_item
+        yield job_item
 
