@@ -9,7 +9,6 @@ from .tools import get_ip
 from scrapy import signals
 from selenium import webdriver
 from scrapy.http import HtmlResponse
-
 from scrapy import signals
 from scrapy.signalmanager import SignalManager
 from scrapy.responsetypes import responsetypes
@@ -18,6 +17,7 @@ from selenium import webdriver
 from six.moves import queue
 from twisted.internet import defer, threads
 from twisted.python.failure import Failure
+from boss.tools.get_ip import Get_ip
 
 
 class BossSpiderMiddleware(object):
@@ -115,10 +115,34 @@ class BossDownloaderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class jspagemiddleware():
 
-    def process_request(self, request, spider):
-        spider.driver.get(request.url)
-        true_page = spider.driver.page_source
-        return HtmlResponse(url=request.url, body=true_page, encoding="utf-8", request=request)
+# class jspagemiddleware():
+#
+#     def process_request(self, request, spider):
+#         spider.driver.get(request.url)
+#         true_page = spider.driver.page_source
+#         return HtmlResponse(url=request.url, body=true_page, encoding="utf-8", request=request)
+
+
+class chromeDownloaderMiddleware(object):
+    def __init__(self, spider):
+        self.driver = spider.driver
+        self.queue = queue.LifoQueue(self.driver, 10)
+        self.sem = defer.DeferredSemaphore(self.driver)
+        SignalManager(dispatcher.Any).connect(self._close, signal=signals.spider_closed)
+
+    def _close(self):
+        while not self.queue.empty():
+            driver = self.queue.get_nowait()
+            driver.close()
+
+    def download_request(self, request, spider):
+        """use semaphore to guard a phantomjs pool"""
+        return self.sem.run(self._wait_request, request, spider)
+
+    def _wait_request(self, request, spider):
+        try:
+            driver = self.queue.get_nowait()
+        except queue.Empty:
+            driver = webdriver.PhantomJS(spider.Chromeoptions)
 

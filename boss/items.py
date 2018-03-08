@@ -17,7 +17,7 @@ def get_city(value):
 
 
 def replace_splash(value):
-    addr_list = value.split("\n")
+    addr_list = value.strip()
     return addr_list
 
 
@@ -27,16 +27,16 @@ def get_id(value):
     return r
 
 
-class FirstItemLoader(ItemLoader):
-    default_output_processor = TakeFirst()
-
-
 class Takethreed(object):
     def __call__(self, values):
         for i in range(len(values)):
             if i == 3:
                 if values[i] is not None and values[i] != '':
                     return values[i]
+
+
+class FirstItemLoader(ItemLoader):
+    default_output_processor = TakeFirst()
 
 
 class bossitem(scrapy.Field):
@@ -49,12 +49,11 @@ class bossitem(scrapy.Field):
 
     # def get_insert_sql(self):
     #     insert_sql = """
-    #         insert into boss_job(title, url, city, job_city, work_years, tags)
-    #         VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE job_desc=VALUES(job_desc)
-    #         ON DUPLICATE KEY UPDATE title=VALUES(title), url=VALUES(url), city=VALUES(city), job_city=VALUES(job_city),
-    #         work_years=VALUES(work_years), tags=VALUES(tags)
+    #         insert into boss_job(title, url, city, work_years, tags, id)
+    #         VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
+    #         title=VALUES(title), UPDATE url=VALUES(url),
+    #         UPDATE city=VALUES(city), UPDATE work_years=VALUES(work_years),
+    #         tags=VALUES(tags), id=VALUES(id)
     #     """
-    #
     #     params = (self["title"], self["url"], self["city"], self["work_years"], self["tags"], self["id"])
-    #
     #     return insert_sql, params

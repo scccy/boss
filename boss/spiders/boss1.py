@@ -4,11 +4,12 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from boss.items import bossitem, FirstItemLoader
 from selenium import webdriver
-# from scrapy.xlib.pydispatch import dispatcher
-# from scrapy import signals
+from pydispatch import dispatcher
+from scrapy import signals
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from fake_useragent import UserAgent
 from boss.tools.get_ip import Get_ip
+
 
 
 class Boss1Spider(CrawlSpider):
@@ -30,15 +31,12 @@ class Boss1Spider(CrawlSpider):
         dcap = dict(DesiredCapabilities.CHROME)
         # dcap["Chrome.page.settings.loadImages"] = False
         dcap["Chrome.page.settings.userAgent"] = headers
-        chromeOptions = webdriver.ChromeOptions()
         # chromeOptions.add_argument('--proxy-server="{0}"'.format(proxy))
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
+        self.Chromeoptions = webdriver.ChromeOptions()
+        self.Chromeoptions.add_argument('--headless')
         self.driver = webdriver.Chrome()
         super(Boss1Spider, self).__init__()
-
-        # dispatcher.connect(self.spider_close, signals.spider_closed)
-
+        dispatcher.connect(self.spider_close, signals.spider_closed)
 
     def spider_close(self):
         self.driver.quit()
@@ -54,5 +52,5 @@ class Boss1Spider(CrawlSpider):
         item_loader.add_value("id", response.url)
         job_item = item_loader.load_item()
 
-        yield job_item
+        return job_item
 
