@@ -7,7 +7,7 @@
 
 import scrapy
 import re
-from scrapy.loader.processors import TakeFirst, MapCompose, Join, Takenumber
+from scrapy.loader.processors import TakeFirst, MapCompose
 from scrapy.loader import ItemLoader
 
 
@@ -17,14 +17,14 @@ def get_city(value):
 
 
 def replace_splash(value):
-    addr_list = value.strip()
-    return addr_list
+    a_list = value.strip()
+    return a_list
 
 
 def get_id(value):
     value = str(value)
-    r = re.findall('(\d+)', value)
-    return r
+    return_a = re.findall('(\d+)', value)
+    return return_a
 
 
 class Takethreed(object):

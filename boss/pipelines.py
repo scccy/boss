@@ -43,3 +43,7 @@ class mysql_insert_match_point(object):
     def process_item(self, item, spider):
         query = self.dbpool_match.runInteraction(self.insert_do, item)
         query.addErrback(self.handle_error, item, spider)
+
+
+class RedisPipeline():
+    pass

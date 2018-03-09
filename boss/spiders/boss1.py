@@ -3,14 +3,13 @@
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from boss.items import bossitem, FirstItemLoader
+from scrapy_redis.spiders import RedisSpider
 
 
-
-
-class Boss1Spider(CrawlSpider):
+class Boss1Spider(RedisSpider):
     name = 'boss'
     allowed_domains = ['www.zhipin.com']
-    start_urls = ['https://www.zhipin.com']
+    redis_key = ['https://www.zhipin.com']
     rules = (
         Rule(LinkExtractor(allow=('www.zhipin.com/job_detail/?query=数据标注&scity=100010000&industry=&position=',)),
              follow=True),

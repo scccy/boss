@@ -28,7 +28,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 10
+DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -67,6 +67,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'boss.pipelines.mysql_insert_match_point': 300,
+    'scrapy_redis.pipelines.RedisPipeline': 400
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -108,3 +109,6 @@ REDIS_URL = 'redis://user:pass@hostname:9001'
 # REDIS_PARAMS['redis_cls'] = 'myproject.RedisClient'
 REDIS_PASSWORD = "258795"
 
+#scrapy_redis配置
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
